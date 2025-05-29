@@ -12,3 +12,7 @@ Your best score and theme preference are saved in your browser's `localStorage`.
 
 Enjoy!
 
+
+## iOS Version
+
+An iOS wrapper using SwiftUI is included in the `ios` folder. The wrapper loads the existing web version in a `WKWebView` so the gameplay is identical. Open `ios/Package.swift` in Xcode and run the `Game2048iOS` target to play on iPhone or iPad.
