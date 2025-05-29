@@ -72,9 +72,10 @@ button:hover {
     padding: 15px;
     border-radius: 6px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-gap: 15px;
     position: relative;
+    touch-action: none;
 }
 
 .tile {
@@ -167,6 +168,10 @@ button:hover {
 
 .tile-merged {
     animation: tile-merge 0.2s ease-in-out;
+}
+
+.tile-selected {
+    box-shadow: 0 0 0 3px #f00 inset;
 }
 
 @keyframes tile-appear {
