@@ -1,3 +1,5 @@
+const MAX_UNDO = 20;
+
 class Game2048 {
     constructor() {
         this.size = 4;
@@ -8,11 +10,11 @@ class Game2048 {
         this.previousStates = [];
         this.isDarkMode = localStorage.getItem('darkMode') === 'true';
         this.moveInProgress = false;
-        
+
         if (this.isDarkMode) {
             document.body.classList.add('dark-mode');
         }
-        
+
         this.init();
         this.setupEventListeners();
     }
@@ -22,17 +24,17 @@ class Game2048 {
         this.grid = Array(this.size).fill().map(() => Array(this.size).fill(0));
         this.score = 0;
         this.updateScore();
-        
+
         // Clear game board
         this.gameBoard.innerHTML = '';
-        
+
         // Create grid cells
         for (let i = 0; i < this.size * this.size; i++) {
             const cell = document.createElement('div');
             cell.className = 'tile';
             this.gameBoard.appendChild(cell);
         }
-        
+
         // Add initial tiles
         this.addRandomTile();
         this.addRandomTile();
@@ -48,11 +50,11 @@ class Game2048 {
                 }
             }
         }
-        
+
         if (emptyCells.length > 0) {
             const { x, y } = emptyCells[Math.floor(Math.random() * emptyCells.length)];
             this.grid[x][y] = Math.random() < 0.9 ? 2 : 4;
-            
+
             // Add animation class to new tile
             const tileIndex = x * this.size + y;
             const tile = this.gameBoard.children[tileIndex];
@@ -68,7 +70,7 @@ class Game2048 {
                 const value = this.grid[i][j];
                 const tile = tiles[i * this.size + j];
                 const currentValue = tile.dataset.value;
-                
+
                 if (currentValue !== value.toString()) {
                     tile.innerHTML = value ? `<div class="tile-inner">${value}</div>` : '';
                     tile.className = `tile ${value ? 'tile-' + value : ''}`;
@@ -91,10 +93,10 @@ class Game2048 {
         document.getElementById('new-game').addEventListener('click', () => this.init());
         document.getElementById('undo').addEventListener('click', () => this.undo());
         document.addEventListener('keydown', (e) => this.handleInput(e));
-        
+
         // Touch events
         let touchStartX, touchStartY;
-        
+
         this.gameBoard.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
@@ -152,6 +154,9 @@ class Game2048 {
             grid: JSON.parse(JSON.stringify(this.grid)),
             score: this.score
         });
+        if (this.previousStates.length > MAX_UNDO) {
+            this.previousStates.shift();
+        }
 
         let moved = false;
         switch (e.key) {
@@ -187,7 +192,7 @@ class Game2048 {
         let moved = false;
         for (let i = 0; i < this.size; i++) {
             const row = this.grid[i];
-            const newRow = this.mergeTiles(row);
+            const newRow = this.mergeTiles(row, pos => i * this.size + pos);
             if (newRow.join(',') !== row.join(',')) {
                 this.grid[i] = newRow;
                 moved = true;
@@ -200,7 +205,7 @@ class Game2048 {
         let moved = false;
         for (let i = 0; i < this.size; i++) {
             const row = this.grid[i].slice().reverse();
-            const newRow = this.mergeTiles(row);
+            const newRow = this.mergeTiles(row, pos => i * this.size + (this.size - 1 - pos));
             if (newRow.join(',') !== row.join(',')) {
                 this.grid[i] = newRow.reverse();
                 moved = true;
@@ -213,7 +218,7 @@ class Game2048 {
         let moved = false;
         for (let j = 0; j < this.size; j++) {
             const column = this.grid.map(row => row[j]);
-            const newColumn = this.mergeTiles(column);
+            const newColumn = this.mergeTiles(column, pos => pos * this.size + j);
             if (newColumn.join(',') !== column.join(',')) {
                 for (let i = 0; i < this.size; i++) {
                     this.grid[i][j] = newColumn[i];
@@ -228,7 +233,7 @@ class Game2048 {
         let moved = false;
         for (let j = 0; j < this.size; j++) {
             const column = this.grid.map(row => row[j]).reverse();
-            const newColumn = this.mergeTiles(column);
+            const newColumn = this.mergeTiles(column, pos => (this.size - 1 - pos) * this.size + j);
             if (newColumn.join(',') !== column.join(',')) {
                 const reversedColumn = newColumn.reverse();
                 for (let i = 0; i < this.size; i++) {
@@ -240,28 +245,30 @@ class Game2048 {
         return moved;
     }
 
-    mergeTiles(line) {
+    mergeTiles(line, getIndex) {
         let tiles = line.filter(tile => tile !== 0);
         let merged = Array(tiles.length).fill(false);
-        
+
         for (let i = 0; i < tiles.length - 1; i++) {
             if (!merged[i] && tiles[i] === tiles[i + 1]) {
                 tiles[i] *= 2;
                 this.score += tiles[i];
                 tiles.splice(i + 1, 1);
                 merged[i] = true;
-                
-                // Add merge animation class
-                const tileElement = this.gameBoard.children[i];
-                tileElement.classList.add('tile-merged');
-                setTimeout(() => tileElement.classList.remove('tile-merged'), 200);
+
+                // Add merge animation class on the correct tile element
+                if (typeof getIndex === 'function') {
+                    const tileElement = this.gameBoard.children[getIndex(i)];
+                    tileElement.classList.add('tile-merged');
+                    setTimeout(() => tileElement.classList.remove('tile-merged'), 200);
+                }
             }
         }
-        
+
         while (tiles.length < this.size) {
             tiles.push(0);
         }
-        
+
         return tiles;
     }
 
@@ -336,4 +343,4 @@ class Game2048 {
 // Initialize game when page loads
 window.addEventListener('DOMContentLoaded', () => {
     new Game2048();
-}); 
+});

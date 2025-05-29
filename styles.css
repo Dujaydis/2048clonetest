@@ -160,7 +160,6 @@ button:hover {
 .dark-mode .tile-2 { background-color: #585858; }
 .dark-mode .tile-4 { background-color: #666666; }
 .dark-mode .tile-8 { background-color: #7a4a2f; }
-/* ... continue for other tile values ... */
 
 .tile-new {
     animation: tile-appear 0.2s ease-in-out;
@@ -189,4 +188,4 @@ button:hover {
 .dark-mode .tile-256 { background-color: #bf8f51; }
 .dark-mode .tile-512 { background-color: #bf7f40; }
 .dark-mode .tile-1024 { background-color: #bf6f30; }
-.dark-mode .tile-2048 { background-color: #bf5f20; } 
+.dark-mode .tile-2048 { background-color: #bf5f20; }
