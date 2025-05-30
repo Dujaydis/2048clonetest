@@ -72,7 +72,11 @@ button:hover {
     padding: 15px;
     border-radius: 6px;
     display: grid;
+ codex/design-web-based-2248-puzzle-game
+    grid-template-columns: repeat(var(--grid-size, 4), 1fr);
+=======
     grid-template-columns: repeat(6, 1fr);
+ main
     grid-gap: 15px;
     position: relative;
     touch-action: none;
@@ -170,8 +174,13 @@ button:hover {
     animation: tile-merge 0.2s ease-in-out;
 }
 
+ codex/design-web-based-2248-puzzle-game
+.tile.selected {
+    outline: 2px solid #f00;
+=======
 .tile-selected {
     box-shadow: 0 0 0 3px #f00 inset;
+ main
 }
 
 @keyframes tile-appear {
