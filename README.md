@@ -1,14 +1,13 @@
-# 2048 Clone
+# 2248 Inspired Puzzle
 
-This is a simple web-based clone of the classic puzzle game **2048**. The game is implemented in plain HTML, CSS, and JavaScript. Just open `index.html` in your browser to start playing.
+This project now hosts a game inspired by **2248**. Instead of sliding tiles, you connect chains of adjacent tiles with the same value. Selected tiles merge into one tile whose value is the sum of the chain. New numbers appear after each merge and the game tracks the highest tile you reach. Whenever a new maximum tile is created, all of the smallest tiles are cleared from the board to make more space.
 
 ## Controls
-- **Keyboard:** use the arrow keys to move the tiles.
-- **Touch:** swipe in any direction on the board when using a touch device.
-- **Undo:** click **Undo** to revert the last move (up to 20 steps are stored).
-- **Dark Mode:** use **Toggle Theme** to switch between light and dark themes.
+- **Mouse / Touch:** drag across adjacent tiles of the same value to create a chain.
+- **New Game:** start a fresh board.
+- **Toggle Theme:** switch between light and dark themes.
 
-Your best score and theme preference are saved in your browser's `localStorage`.
+Your best score, theme preference and highest tile are stored in `localStorage`.
 
 Enjoy!
 
